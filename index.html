@@ -189,20 +189,24 @@
       <div class="container">
         <div class="row align-items-center">
           <div class="col-md-12 col-lg-5 mb-5 mb-lg-0">
-            <h2 class="mb-3 text-uppercase">Add <strong class="text-black font-weight-bold">Workout</strong></h2>
+            <h2 class="mb-3 text-uppercase">Add <strong class="text-black font-weight-bold">My Workout</strong></h2>
             <form id="add-workout-form">
               <fieldset class="uk-fieldset">
           
                   <div class="uk-margin">
-                      <input class="uk-input" type="text" placeholder="Title of Workout">
+                      <input class="uk-input" id="workout-title" type="text" placeholder="Title of Workout">
                   </div>
                   
                   <div class="uk-margin">
-                      <textarea class="uk-textarea" rows="5" placeholder="Description of Workout"></textarea>
+                      <textarea class="uk-textarea" id="workout-description" rows="5" placeholder="Description of Workout"></textarea>
                   </div>
 
                   <div class="uk-margin">
-                      <input class="uk-input" type="text" placeholder="YouTube URL">
+                    <textarea class="uk-textarea" id="workout-notes" rows="5" placeholder="Notes"></textarea>
+                  </div>
+
+                  <div class="uk-margin">
+                      <input class="uk-input" id="youtube-url" type="text" placeholder="YouTube URL">
                   </div>
 
                   <div class="uk-margin">
@@ -221,8 +225,8 @@
                   </div>
       
               </fieldset>
+              <button class="btn btn-primary pill px-4">Submit</button>
             </form>
-            <p><a href="#" class="btn btn-primary pill px-4">Submit</a></p>
           </div>
           <div class="col-md-12 col-lg-6 ml-auto">
             <img src="images/about.jpg" alt="Image" class="img-fluid">
