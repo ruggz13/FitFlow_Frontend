@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     console.log("Rob Loaded")
   getAllWorkers()
+  getForm()
 })
 
 
@@ -12,11 +13,17 @@ function getAllWorkers(){
     .then(res => res.forEach(showWorkouts))
 }
 
-
-
 function showWorkouts(workout){
         debugger
    let workouttext = document.getElementById('monday1')
     workouttext.innerText = workout.name
+}
+
+function getForm(){
+    const addWorkoutForm = document.getElementById("add-workout-form")
+    addWorkoutForm.addEventListener("submit", addWorkout)
+}
+
+function addWorkout(event){
 
 }
