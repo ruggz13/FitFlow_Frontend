@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
     console.log("Rob Loaded")
-    getAllWorkers()
+    getAllWorkouts()
     getForm()
 })
 
@@ -11,7 +11,7 @@ function getForm(){
 
 let workoutDivRowWrap = document.getElementById('pills-monday')
 
-function getAllWorkers(){
+function getAllWorkouts(){
     fetch('http://localhost:3000/workouts')
     .then(res => res.json())
     .then(res => res.forEach(showWorkouts))
@@ -20,8 +20,7 @@ function getAllWorkers(){
 
 
 function showWorkouts(workout){
-        debugger
-   let workouttext = document.getElementById('monday1')
+   let workouttext = document.getElementById('')
     workouttext.innerText = workout.name
 
 }
