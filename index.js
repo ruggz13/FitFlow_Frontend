@@ -21,30 +21,33 @@ function login(){
 
 }
 
-
-
 function getForm(){
     const addWorkoutForm = document.getElementById("add-workout-form")
     addWorkoutForm.addEventListener("submit", addMyWorkout)
 }
 
-function addWorkout(){
-
-<<<<<<< HEAD
-=======
-}
-
 // let workoutDivRowWrap = document.getElementById('pills-monday')
 
->>>>>>> 4d72bd97d7e78e04f63ab5414329e9c283b34866
 function getAllWorkouts(){
     fetch('http://localhost:3000/workouts')
     .then(res => res.json())
     .then(res => res.forEach(showWorkouts))
 }
 
+function showWorkouts(workout){
+        debugger
+   let workouttext = document.getElementById('monday1')
+    workouttext.innerText = workout.name
+}
+
+function getForm(){
+    const addWorkoutForm = document.getElementById("add-workout-form")
+    addWorkoutForm.addEventListener("submit", addWorkout)
+}
+
+function addWorkout(event){
 let sundayButton = getElementById('pills-sunday-tab')
-sundayButton.addEventListener('click' renderDay)
+sundayButton.addEventListener('click', renderDay)}
 
 function showWorkouts(workout){
    let workouttext = document.getElementById('monday1')
@@ -91,4 +94,8 @@ function addMyWorkout(event){
         body: JSON.stringify(data)
     })
     .then(response => console.log(response))
+}
+    
+function renderDay(){
+    
 }
