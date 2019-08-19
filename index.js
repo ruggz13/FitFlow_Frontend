@@ -70,8 +70,26 @@ function showWorkouts(workout, h2){
     const a = document.createElement("a")
     a.innerText = workout.name
     a.style.textDecoration = "underline"
+    a.href = "#"
+    // a.id = `workout-${workout.id}`
     li.appendChild(a)
     h2.appendChild(li)
+    a.addEventListener("click", (event) => renderWorkoutShow(workout))
+}
+
+function renderWorkoutShow(event){
+    const divCenter = document.getElementById("center-div")
+    divCenter.innerHTML = ""
+    const childDiv = document.createElement("div")
+    childDiv.innerHTML = "<div class='col-md-12 col-lg-5 mb-5 mb-lg-0'>"
+    const h2 = document.createElement("h2")
+    h2.innerHTML = `<h2 class='mb-3 text-uppercase'><strong class='text-black font-weight-bold'>${event.name}</strong></h2>`
+    divCenter.appendChild(h2)
+    h2.appendChild(childDiv)
+    const descH4 = document.createElement("h4")
+    descH4.innerHTML = `<strong>Description:</strong> ${event.description}`
+    childDiv.innerHTML = `<iframe width='560' height='315' src='${event.video_url}' frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe>`
+    childDiv.appendChild(descH4)
 }
 
 function scheduledWorkouts(workout){
