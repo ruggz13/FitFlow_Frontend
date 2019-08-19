@@ -10,6 +10,7 @@ loginForm.addEventListener('submit', login)
 function login(){
     event.preventDefault()
   let username = document.getElementById('username').value
+  debugger
   fetch(`http://localhost:3000/login/${username}`)
   .then(res => res.json())
   .then(res => {
@@ -101,7 +102,7 @@ function addWorkout(event){
     }
         function renderDay(res, num){
            
-
+                debugger
             
                 res.workouts.forEach(workout => {
         //    let workouttext = document.getElementById('monday1')
