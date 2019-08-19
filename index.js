@@ -9,6 +9,7 @@ loginForm.addEventListener('submit', login)
 
 function login(){
     event.preventDefault()
+
   let username = document.getElementById('username').value
   fetch(`http://localhost:3000/login/${username}`)
   .then(res => res.json())
@@ -17,8 +18,11 @@ function login(){
     addWorkoutForm.addEventListener("submit", (e) => addMyWorkout(event, res))
         let displayUsername = document.getElementById('logged-in')
       displayUsername.innerText = res.name
+        const myWorkoutButton = document.getElementById("my-workouts")
+    myWorkoutButton.addEventListener("click", () => renderMyWorkouts(res))
 
-      scheduledWorkouts(res)
+
+    scheduledWorkouts(res)
   })
 
 }
@@ -75,18 +79,18 @@ function showWorkouts(workout, childDiv){
     a.addEventListener("click", (event) => renderWorkoutShow(workout))
 }
 
-function renderWorkoutShow(event){
+function renderWorkoutShow(workout){
     const divCenter = document.getElementById("center-div")
     divCenter.innerHTML = ""
     const childDiv = document.createElement("div")
     childDiv.innerHTML = "<div class='col-md-12 col-lg-5 mb-5 mb-lg-0'>"
     const h2 = document.createElement("h2")
-    h2.innerHTML = `<h2 class='mb-3 text-uppercase'><strong class='text-black font-weight-bold'>${event.name}</strong></h2>`
+    h2.innerHTML = `<h2 class='mb-3 text-uppercase'><strong class='text-black font-weight-bold'>${workout.name}</strong></h2>`
     divCenter.appendChild(h2)
     h2.appendChild(childDiv)
     const descH4 = document.createElement("h4")
-    descH4.innerHTML = `<strong>Description:</strong> ${event.description}`
-    childDiv.innerHTML = `<iframe width='560' height='315' src='${event.video_url}' frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe>`
+    descH4.innerHTML = `<strong>Description:</strong> ${workout.description}`
+    childDiv.innerHTML = `<iframe width='560' height='315' src='${workout.video_url}' frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe>`
     // childDiv.classList = "w-110 h-100 block-feature p-5 bg-light"
     childDiv.appendChild(descH4)
 }
@@ -119,19 +123,8 @@ function renderDay(e, res, num){
 
 let  yourWorkouts = res.user_workouts.filter(d => d.day_id === num)
      yourWorkouts.forEach(workout => {
-    
-         //    let workouttext = document.getElementById('monday1')
-        //     workouttext.innerText = workout.name
-  
-//    let workoutTab = document.getElementById('pills-tabContent')
-
-
-    // pillDay.classList.add('tab-pane', 'fade', 'show', 'active')
-    // pillDay.id = `pills-monday`
-    // pillDay.role.add('tabpanel')
         let rowWrap = document.createElement('div')
         rowWrap.classList.add('row-wrap')
-      
         rowWrap.innerHTML=`
         <div class="row bg-white p-4 align-items-center">
             <div class="col-sm-3 col-md-3 col-lg-3"><h3 class="h5">${workout.workout.name}</h3></div>
@@ -147,8 +140,8 @@ let  yourWorkouts = res.user_workouts.filter(d => d.day_id === num)
     }
 
 
-
 function addMyWorkout(event, res){
+
     event.preventDefault()
 
     let dayName = event.target.querySelector("#form-stacked-select").value
@@ -201,4 +194,31 @@ function getAllWorkoutsButton(){
     const allWorkoutButton = document.getElementById("all-workouts")
     allWorkoutButton.addEventListener("click", renderAllWorkouts)
 }
+
+
+function renderMyWorkouts(res){
+    const divCenter = document.getElementById("center-div")
+    divCenter.innerHTML = ""
+    const childDiv = document.createElement("div")
+    // childDiv.innerHTML = "<div class='col-md-12 col-lg-5 mb-5 mb-lg-0'>"
+    divCenter.appendChild(childDiv)
+    const h2 = document.createElement("h2")
+    h2.innerHTML = "<h2 class='mb-3 text-uppercase'>My <strong class='text-black font-weight-bold'>Workouts</strong></h2>"
+    childDiv.appendChild(h2)
+    res.user_workouts.forEach(
+        user_workout => {
+            const li = document.createElement("li")
+            const a = document.createElement("a")
+            a.innerText = user_workout.workout.name
+            a.style.textDecoration = "underline"
+            a.href = "#"
+            li.appendChild(a)
+            childDiv.appendChild(li)
+            a.addEventListener("click", (event) => renderWorkoutShow(user_workout.workout))
+
+        }
+    )
+}
+
+
 
