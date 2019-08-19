@@ -71,6 +71,7 @@ function showWorkouts(workout, h2){
     a.style.textDecoration = "underline"
     li.appendChild(a)
     h2.appendChild(li)
+}
 
 //    let workouttext = document.getElementById('monday1')
 //     workouttext.innerText = workout.name
@@ -96,7 +97,6 @@ function showWorkouts(workout, h2){
 //    pillDay.appendChild(rowWrap)
     
 
-}
 
 function addMyWorkout(event){
     debugger
