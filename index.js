@@ -89,6 +89,7 @@ function renderWorkoutShow(event){
     const descH4 = document.createElement("h4")
     descH4.innerHTML = `<strong>Description:</strong> ${event.description}`
     childDiv.innerHTML = `<iframe width='560' height='315' src='${event.video_url}' frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe>`
+    // childDiv.classList = "w-110 h-100 block-feature p-5 bg-light"
     childDiv.appendChild(descH4)
 }
 
