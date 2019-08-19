@@ -33,19 +33,19 @@ function renderAllWorkouts(){
     const divCenter = document.getElementById("center-div")
     divCenter.innerHTML = ""
     const childDiv = document.createElement("div")
-    childDiv.innerHTML = "<div class='col-md-12 col-lg-5 mb-5 mb-lg-0'>"
+    // childDiv.innerHTML = "<div class='col-md-12 col-lg-5 mb-5 mb-lg-0'>"
     divCenter.appendChild(childDiv)
     const h2 = document.createElement("h2")
     h2.innerHTML = "<h2 class='mb-3 text-uppercase'>All <strong class='text-black font-weight-bold'>Workouts</strong></h2>"
-    divCenter.appendChild(h2)
-    getAllWorkouts(h2)
+    childDiv.appendChild(h2)
+    getAllWorkouts(childDiv)
 
 }
 
-function getAllWorkouts(h2){
+function getAllWorkouts(childDiv){
     fetch('http://localhost:3000/workouts')
     .then(res => res.json())
-    .then(res => res.forEach(workout => showWorkouts(workout, h2)))
+    .then(res => res.forEach(workout => showWorkouts(workout, childDiv)))
 }
 // function allScheduledWorkouts(){
 //     fetch('http://localhost:3000/workouts')
@@ -64,7 +64,7 @@ function addWorkout(event){
 let sundayButton = getElementById('pills-sunday-tab')
 sundayButton.addEventListener('click', renderDay)}
 
-function showWorkouts(workout, h2){
+function showWorkouts(workout, childDiv){
 
     const li = document.createElement("li")
     const a = document.createElement("a")
@@ -73,7 +73,7 @@ function showWorkouts(workout, h2){
     a.href = "#"
     // a.id = `workout-${workout.id}`
     li.appendChild(a)
-    h2.appendChild(li)
+    childDiv.appendChild(li)
     a.addEventListener("click", (event) => renderWorkoutShow(workout))
 }
 
