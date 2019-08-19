@@ -33,19 +33,19 @@ function renderAllWorkouts(){
     const divCenter = document.getElementById("center-div")
     divCenter.innerHTML = ""
     const childDiv = document.createElement("div")
-    childDiv.innerHTML = "<div class='col-md-12 col-lg-5 mb-5 mb-lg-0'>"
+    // childDiv.innerHTML = "<div class='col-md-12 col-lg-5 mb-5 mb-lg-0'>"
     divCenter.appendChild(childDiv)
     const h2 = document.createElement("h2")
     h2.innerHTML = "<h2 class='mb-3 text-uppercase'>All <strong class='text-black font-weight-bold'>Workouts</strong></h2>"
-    divCenter.appendChild(h2)
-    getAllWorkouts(h2)
+    childDiv.appendChild(h2)
+    getAllWorkouts(childDiv)
 
 }
 
-function getAllWorkouts(h2){
+function getAllWorkouts(childDiv){
     fetch('http://localhost:3000/workouts')
     .then(res => res.json())
-    .then(res => res.forEach(workout => showWorkouts(workout, h2)))
+    .then(res => res.forEach(workout => showWorkouts(workout, childDiv)))
 }
 
 
@@ -59,50 +59,65 @@ function getForm(){
     addWorkoutForm.addEventListener("submit", addWorkout)
 }
 
-function addWorkout(event){
-    let sundayButton = getElementById('pills-sunday-tab')
-    sundayButton.addEventListener('click', renderDay)}
-    
-    function showWorkouts(workout, h2){
-        
-        const li = document.createElement("li")
-        const a = document.createElement("a")
-        a.innerText = workout.name
-        a.style.textDecoration = "underline"
-        li.appendChild(a)
-        h2.appendChild(li)
-    }
-    
-    function scheduledWorkouts(res){
-        
-        let sundayButton = document.getElementById('pills-sunday-tab')
-        sundayButton.addEventListener('click', (e) => renderDay(e, res, 1))
-        
-        let mondayButton = document.getElementById('pills-monday-tab')
-        mondayButton.addEventListener('click', (e) => renderDay(e, res, 2))
-        
-        let tuesdayButton = document.getElementById('pills-tuesday-tab')
-        tuesdayButton.addEventListener('click', (e) => renderDay(e, res, 3))
-        
-        let wednesdayButton = document.getElementById('pills-wednesday-tab')
-        wednesdayButton.addEventListener('click', (e) => renderDay(e, res, 4))
-        
-        let thursdayButton = document.getElementById('pills-thursday-tab')
-        thursdayButton.addEventListener('click', (e) => renderDay(e, res, 5))
-        
-        let fridayButton = document.getElementById('pills-friday-tab')
-        fridayButton.addEventListener('click', (e) => renderDay(e, res, 6))
-        
-        let saturdayButton = document.getElementById('pills-saturday-tab')
-        saturdayButton.addEventListener('click', (e) => renderDay(e, res, 7))
-    }
- function renderDay(e, res, num){
-     let pillDay = document.getElementById(`pills-1`)
-     pillDay.innerText = ""
-    
-    let  yourWorkouts = res.user_workouts.filter(d => d.day_id === num)
 
 
+
+function showWorkouts(workout, childDiv){
+
+    const li = document.createElement("li")
+    const a = document.createElement("a")
+    a.innerText = workout.name
+    a.style.textDecoration = "underline"
+    a.href = "#"
+    // a.id = `workout-${workout.id}`
+    li.appendChild(a)
+    childDiv.appendChild(li)
+    a.addEventListener("click", (event) => renderWorkoutShow(workout))
+}
+
+function renderWorkoutShow(event){
+    const divCenter = document.getElementById("center-div")
+    divCenter.innerHTML = ""
+    const childDiv = document.createElement("div")
+    childDiv.innerHTML = "<div class='col-md-12 col-lg-5 mb-5 mb-lg-0'>"
+    const h2 = document.createElement("h2")
+    h2.innerHTML = `<h2 class='mb-3 text-uppercase'><strong class='text-black font-weight-bold'>${event.name}</strong></h2>`
+    divCenter.appendChild(h2)
+    h2.appendChild(childDiv)
+    const descH4 = document.createElement("h4")
+    descH4.innerHTML = `<strong>Description:</strong> ${event.description}`
+    childDiv.innerHTML = `<iframe width='560' height='315' src='${event.video_url}' frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe>`
+    // childDiv.classList = "w-110 h-100 block-feature p-5 bg-light"
+    childDiv.appendChild(descH4)
+}
+function scheduledWorkouts(res){
+        
+    let sundayButton = document.getElementById('pills-sunday-tab')
+    sundayButton.addEventListener('click', (e) => renderDay(e, res, 1))
+    
+    let mondayButton = document.getElementById('pills-monday-tab')
+    mondayButton.addEventListener('click', (e) => renderDay(e, res, 2))
+    
+    let tuesdayButton = document.getElementById('pills-tuesday-tab')
+    tuesdayButton.addEventListener('click', (e) => renderDay(e, res, 3))
+    
+    let wednesdayButton = document.getElementById('pills-wednesday-tab')
+    wednesdayButton.addEventListener('click', (e) => renderDay(e, res, 4))
+    
+    let thursdayButton = document.getElementById('pills-thursday-tab')
+    thursdayButton.addEventListener('click', (e) => renderDay(e, res, 5))
+    
+    let fridayButton = document.getElementById('pills-friday-tab')
+    fridayButton.addEventListener('click', (e) => renderDay(e, res, 6))
+    
+    let saturdayButton = document.getElementById('pills-saturday-tab')
+    saturdayButton.addEventListener('click', (e) => renderDay(e, res, 7))
+}
+function renderDay(e, res, num){
+ let pillDay = document.getElementById(`pills-1`)
+ pillDay.innerText = ""
+
+let  yourWorkouts = res.user_workouts.filter(d => d.day_id === num)
      yourWorkouts.forEach(workout => {
     
          //    let workouttext = document.getElementById('monday1')
