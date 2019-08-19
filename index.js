@@ -9,26 +9,27 @@ loginForm.addEventListener('submit', login)
 
 function login(){
     event.preventDefault()
-    let username = document.getElementById('username').value
-    fetch(`http://localhost:3000/login/${username}`)
-    .then(res => res.json())
-    .then(res => {
-     
-    let displayUsername = document.getElementById('logged-in')
-    displayUsername.innerText = res.name
 
-    const myWorkoutButton = document.getElementById("my-workouts")
+  let username = document.getElementById('username').value
+  fetch(`http://localhost:3000/login/${username}`)
+  .then(res => res.json())
+  .then(res => {
+    const addWorkoutForm = document.getElementById("add-workout-form")
+    addWorkoutForm.addEventListener("submit", (e) => addMyWorkout(event, res))
+        let displayUsername = document.getElementById('logged-in')
+      displayUsername.innerText = res.name
+        const myWorkoutButton = document.getElementById("my-workouts")
     myWorkoutButton.addEventListener("click", () => renderMyWorkouts(res))
+
 
     scheduledWorkouts(res)
   })
 
 }
 
-// function getForm(){
-//     const addWorkoutForm = document.getElementById("add-workout-form")
-//     addWorkoutForm.addEventListener("submit", addMyWorkout)
-// }
+
+
+
 
 // let workoutDivRowWrap = document.getElementById('pills-monday')
 
@@ -139,24 +140,53 @@ let  yourWorkouts = res.user_workouts.filter(d => d.day_id === num)
     }
 
 
+function addMyWorkout(event, res){
 
-function addMyWorkout(event){
     event.preventDefault()
+
+    let dayName = event.target.querySelector("#form-stacked-select").value
+    let day
+    switch(dayName){
+        case "Sunday":
+            day = 1;
+            break;
+          case "Monday":
+            day = 2;
+            break;
+          case "Tuesday":
+             day = 3;
+            break;
+          case "Wednesday":
+            day = 4;
+            break;
+          case "Thursday":
+            day = 5;
+            break;
+          case "Friday":
+            day = 6;
+            break;
+          case "Saturday":
+            day = 7;
+        }
+    
     let data = {
         name: event.target.querySelector("#workout-title").value,
         description: event.target.querySelector("#workout-description").value,
         video_url: event.target.querySelector("#youtube-url").value,
         notes: event.target.querySelector("#workout-notes").value,
-        day_id: event.target.querySelector("#form-stacked-select").value
+        day_id: day,
+        user_id: res.id
     }
-    fetch("http://localhost:3000/workouts", {
+  debugger
+    fetch(`http://localhost:3000/addworkout/${res.username}`, {
         method: "POST",
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(data)
     })
-    .then(response => console.log(response))
+    .then(res => res.json())
+    .then(res => scheduledWorkouts(res) )
 }
     
 
