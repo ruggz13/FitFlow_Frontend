@@ -17,7 +17,8 @@ function login(){
       displayUsername.innerText = res.user.name
       let pillDay = document.getElementById('pills-1')
         pillDay.innerText = ""
-      res.workouts.forEach(scheduledWorkouts)
+     
+      scheduledWorkouts(res)
   })
 
 }
@@ -47,11 +48,12 @@ function getAllWorkouts(h2){
     .then(res => res.json())
     .then(res => res.forEach(workout => showWorkouts(workout, h2)))
 }
-// function allScheduledWorkouts(){
-//     fetch('http://localhost:3000/workouts')
-//     .then(res => res.json())
-//     .then(res => res.forEach(workout => scheduledWorkouts(workout)))
-// }
+
+
+
+function renderDay(){
+    
+}
 
 
 
@@ -61,22 +63,49 @@ function getForm(){
 }
 
 function addWorkout(event){
-let sundayButton = getElementById('pills-sunday-tab')
-sundayButton.addEventListener('click', renderDay)}
+    let sundayButton = getElementById('pills-sunday-tab')
+    sundayButton.addEventListener('click', renderDay)}
+    
+    function showWorkouts(workout, h2){
+        
+        const li = document.createElement("li")
+        const a = document.createElement("a")
+        a.innerText = workout.name
+        a.style.textDecoration = "underline"
+        li.appendChild(a)
+        h2.appendChild(li)
+    }
+    
+    function scheduledWorkouts(res){
+        
+        let sundayButton = document.getElementById('pills-sunday-tab')
+        sundayButton.addEventListener('click', (e) => renderDay(res, 1))
+        
+        let mondayButton = document.getElementById('pills-monday-tab')
+        mondayButton.addEventListener('click', (e) => renderDay(res, 2))
+        
+        let tuesdayButton = document.getElementById('pills-tuesday-tab')
+        tuesdayButton.addEventListener('click', (e) => renderDay(res, 3))
+        
+        let wednesdayButton = document.getElementById('pills-wednesday-tab')
+        wednesdayButton.addEventListener('click', (e) => renderDay(res, 4))
+        
+        let thursdayButton = document.getElementById('pills-thursday-tab')
+        thursdayButton.addEventListener('click', (e) => renderDay(res, 5))
+        
+        let fridayButton = document.getElementById('pills-friday-tab')
+        fridayButton.addEventListener('click', (e) => renderDay(res, 6))
+        
+        let saturdayButton = document.getElementById('pills-saturday-tab')
+        saturdayButton.addEventListener('click', (e) => renderDay(res, 7))
+    }
+        function renderDay(res, num){
+           
 
-function showWorkouts(workout, h2){
-
-    const li = document.createElement("li")
-    const a = document.createElement("a")
-    a.innerText = workout.name
-    a.style.textDecoration = "underline"
-    li.appendChild(a)
-    h2.appendChild(li)
-}
-
-function scheduledWorkouts(workout){
-//    let workouttext = document.getElementById('monday1')
-//     workouttext.innerText = workout.name
+            
+                res.workouts.forEach(workout => {
+        //    let workouttext = document.getElementById('monday1')
+        //     workouttext.innerText = workout.name
   
 //    let workoutTab = document.getElementById('pills-tabContent')
    
@@ -97,7 +126,9 @@ function scheduledWorkouts(workout){
 
 //    workoutTab.appendChild(pillDay)
    pillDay.appendChild(rowWrap)
-}
+        })
+    }
+
 
 
 function addMyWorkout(event){
@@ -120,9 +151,6 @@ function addMyWorkout(event){
     .then(response => console.log(response))
 }
     
-function renderDay(){
-    
-}
 
 function getAllWorkoutsButton(){
     const allWorkoutButton = document.getElementById("all-workouts")
