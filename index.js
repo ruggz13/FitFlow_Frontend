@@ -13,11 +13,11 @@ function login(){
   fetch(`http://localhost:3000/login/${username}`)
   .then(res => res.json())
   .then(res => {
-      let displayUsername = document.getElementById('logged-in')
-      displayUsername.innerText = res.user.name
-      let pillDay = document.getElementById('pills-1')
-        pillDay.innerText = ""
-      res.workouts.forEach(scheduledWorkouts)
+     
+        let displayUsername = document.getElementById('logged-in')
+      displayUsername.innerText = res.name
+
+      scheduledWorkouts(res)
   })
 
 }
@@ -47,11 +47,10 @@ function getAllWorkouts(childDiv){
     .then(res => res.json())
     .then(res => res.forEach(workout => showWorkouts(workout, childDiv)))
 }
-// function allScheduledWorkouts(){
-//     fetch('http://localhost:3000/workouts')
-//     .then(res => res.json())
-//     .then(res => res.forEach(workout => scheduledWorkouts(workout)))
-// }
+
+
+
+
 
 
 
@@ -60,9 +59,34 @@ function getForm(){
     addWorkoutForm.addEventListener("submit", addWorkout)
 }
 
-function addWorkout(event){
-let sundayButton = getElementById('pills-sunday-tab')
-sundayButton.addEventListener('click', renderDay)}
+    function scheduledWorkouts(res){
+        
+        let sundayButton = document.getElementById('pills-sunday-tab')
+        sundayButton.addEventListener('click', (e) => renderDay(e, res, 1))
+        
+        let mondayButton = document.getElementById('pills-monday-tab')
+        mondayButton.addEventListener('click', (e) => renderDay(e, res, 2))
+        
+        let tuesdayButton = document.getElementById('pills-tuesday-tab')
+        tuesdayButton.addEventListener('click', (e) => renderDay(e, res, 3))
+        
+        let wednesdayButton = document.getElementById('pills-wednesday-tab')
+        wednesdayButton.addEventListener('click', (e) => renderDay(e, res, 4))
+        
+        let thursdayButton = document.getElementById('pills-thursday-tab')
+        thursdayButton.addEventListener('click', (e) => renderDay(e, res, 5))
+        
+        let fridayButton = document.getElementById('pills-friday-tab')
+        fridayButton.addEventListener('click', (e) => renderDay(e, res, 6))
+        
+        let saturdayButton = document.getElementById('pills-saturday-tab')
+        saturdayButton.addEventListener('click', (e) => renderDay(e, res, 7))
+    }
+ function renderDay(e, res, num){
+     let pillDay = document.getElementById(`pills-1`)
+     pillDay.innerText = ""
+    
+    let  yourWorkouts = res.user_workouts.filter(d => d.day_id === num)
 
 function showWorkouts(workout, childDiv){
 
@@ -93,30 +117,35 @@ function renderWorkoutShow(event){
     childDiv.appendChild(descH4)
 }
 
-function scheduledWorkouts(workout){
-//    let workouttext = document.getElementById('monday1')
-//     workouttext.innerText = workout.name
+
+     yourWorkouts.forEach(workout => {
+    
+         //    let workouttext = document.getElementById('monday1')
+        //     workouttext.innerText = workout.name
   
 //    let workoutTab = document.getElementById('pills-tabContent')
-   
-   let pillDay = document.getElementById('pills-1')
+
 
     // pillDay.classList.add('tab-pane', 'fade', 'show', 'active')
     // pillDay.id = `pills-monday`
     // pillDay.role.add('tabpanel')
-   let rowWrap = document.createElement('div')
-   rowWrap.classList.add('row-wrap')
-   rowWrap.innerHTML=`
-   <div class="row bg-white p-4 align-items-center">
-     <div class="col-sm-3 col-md-3 col-lg-3"><h3 class="h5">${workout.name}</h3></div>
-     <div class="col-sm-3 col-md-3 col-lg-3"><span></span>Notes: ${workout.notes}</div>
-     <div class="col-sm-3 col-md-3 col-lg-3"><span class="icon-person mr-3"></span> David Holmes</div>
-     <div class="col-sm-3 col-md-3 col-lg-3 text-md-right"><a href="#" class="btn btn-primary pill px-4 mt-3 mt-md-0">Delete Workout</a></div>     
-   </div>`
+        let rowWrap = document.createElement('div')
+        rowWrap.classList.add('row-wrap')
+      
+        rowWrap.innerHTML=`
+        <div class="row bg-white p-4 align-items-center">
+            <div class="col-sm-3 col-md-3 col-lg-3"><h3 class="h5">${workout.workout.name}</h3></div>
+            <div class="col-sm-3 col-md-3 col-lg-3"><span></span>Notes: ${workout.workout.notes}</div>
+            <div class="col-sm-3 col-md-3 col-lg-3"><span></span> </div>       
+            <div class="col-sm-3 col-md-3 col-lg-3 text-md-right"><a href="#" class="btn btn-primary pill px-4 mt-3 mt-md-0">Delete Workout</a></div>     
+        </div>`
 
 //    workoutTab.appendChild(pillDay)
-   pillDay.appendChild(rowWrap)
-}
+    pillDay.appendChild(rowWrap)
+    
+        })
+    }
+
 
 
 function addMyWorkout(event){
@@ -139,9 +168,6 @@ function addMyWorkout(event){
     .then(response => console.log(response))
 }
     
-function renderDay(){
-    
-}
 
 function getAllWorkoutsButton(){
     const allWorkoutButton = document.getElementById("all-workouts")
