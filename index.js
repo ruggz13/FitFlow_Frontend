@@ -15,6 +15,7 @@ function login(){
   fetch(`http://localhost:3000/login/${username}`)
   .then(res => res.json())
   .then(res => {
+      
     addWorkoutForm.addEventListener("submit", (e) => addMyWorkout(event, res))
         let displayUsername = document.getElementById('logged-in')
       displayUsername.innerText = res.username
