@@ -16,12 +16,14 @@ function login(){
   .then(res => res.json())
   .then(res => {
       
+      if (res.username){
     addWorkoutForm.addEventListener("submit", (e) => addMyWorkout(event, res))
         let displayUsername = document.getElementById('logged-in')
-      displayUsername.innerText = res.username
+        displayUsername.innerText = res.username
         const myWorkoutButton = document.getElementById("my-workouts")
     myWorkoutButton.addEventListener("click", () => renderMyWorkouts(res))
     loginForm.reset()
+      }
 
     scheduledWorkouts(res)
   })
