@@ -291,10 +291,15 @@ function addMyWorkout(event, res){
     })
     .then(res => res.json())
     .then(res => {
+        
         alert("Workout Added!")
         addWorkoutForm.reset()
-        scheduledWorkouts(res)} )
+        displayTodaysWorkout(res)
+        } )
 }
+
+
+
     
 function renderMyWorkouts(res){
     const divCenter = document.getElementById("center-div")
@@ -340,6 +345,7 @@ function renderMyWorkouts(res){
 function displayTodaysWorkout(res) {
    
     let todayRow = document.getElementById('todays-workout-row')
+    todayRow.innerText = ""
     let d = new Date();
     d = d.getDay() + 1
     if (res){
@@ -354,10 +360,10 @@ function displayTodaysWorkout(res) {
         </span>
         <h2>Today's Workout</h2>
         <p>${element.workout.name}</p>
-        <p>${element.workout.description}</p>
         </div>`
     todayRow.appendChild(todayWorkoutDiv)})
     }        
+    scheduledWorkouts(res)
 
     
 
