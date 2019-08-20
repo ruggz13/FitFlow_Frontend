@@ -113,11 +113,16 @@ function renderWorkoutShow(workout){
     const h2 = document.createElement("h2")
     h2.innerHTML = `<h2 class='mb-3 text-uppercase'><strong class='text-black font-weight-bold'>${workout.name}</strong></h2>`
     divCenter.appendChild(h2)
-    const deleteButton = document.createElement("a")
-    deleteButton.innerHTML = "<a class='uk-icon-button uk-margin-small-right' uk-icon='trash'></a>"
-    deleteButton.style.marginLeft = "30em"
-    h2.appendChild(deleteButton)
-    deleteButton.addEventListener("click", (event) => removeWorkout(divCenter, workout))
+    // debugger
+    if((document.getElementById('logged-in').innerText) !== ""){
+
+
+        const deleteButton = document.createElement("a")
+        deleteButton.innerHTML = "<a class='uk-icon-button uk-margin-small-right' uk-icon='trash'></a>"
+        deleteButton.style.marginLeft = "30em"
+        h2.appendChild(deleteButton)
+        deleteButton.addEventListener("click", (event) => removeWorkout(divCenter, workout))
+    }
     h2.appendChild(childDiv)
     const descH4 = document.createElement("h4")
     descH4.innerHTML = `<strong>Description:</strong> ${workout.description}`
