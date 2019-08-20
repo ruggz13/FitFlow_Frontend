@@ -113,9 +113,7 @@ function renderWorkoutShow(workout){
     const h2 = document.createElement("h2")
     h2.innerHTML = `<h2 class='mb-3 text-uppercase'><strong class='text-black font-weight-bold'>${workout.name}</strong></h2>`
     divCenter.appendChild(h2)
-    // debugger
     if((document.getElementById('logged-in').innerText) !== ""){
-
 
         const deleteButton = document.createElement("a")
         deleteButton.innerHTML = "<a class='uk-icon-button uk-margin-small-right' uk-icon='trash'></a>"
