@@ -137,6 +137,12 @@ function renderWorkoutShow(workout){
     divCenter.appendChild(h2)
     if((document.getElementById('logged-in').innerText) !== ""){
 
+
+        const editButton = document.createElement("a")
+        editButton.innerHTML = "<a class='uk-icon-button uk-margin-small-right' uk-icon='pencil'></a>"
+        editButton.style.marginLeft = "30em"
+        h2.appendChild(editButton)
+        editButton.addEventListener("click", (event) => renderEditWorkoutForm(workout, divCenter))
         const deleteButton = document.createElement("a")
         deleteButton.innerHTML = "<a class='uk-icon-button uk-margin-small-right' uk-icon='trash'></a>"
         deleteButton.style.marginLeft = "30em"
@@ -147,7 +153,67 @@ function renderWorkoutShow(workout){
     const descH4 = document.createElement("h4")
     descH4.innerHTML = `<strong>Description:</strong> ${workout.description}`
     childDiv.innerHTML = `<iframe width='560' height='315' src='${workout.video_url}' frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe>`
+    const notesH4 = document.createElement("h4")
+    notesH4.innerHTML = `<strong>Notes:</strong> ${workout.notes}`
     childDiv.appendChild(descH4)
+    childDiv.appendChild(notesH4)
+}
+
+function renderEditWorkoutForm(workout, divCenter){
+    divCenter.innerHTML = ""
+    const editForm = document.createElement("form")
+    editForm.id = "edit-form"
+    editForm.innerHTML = 
+        `<form id='add-workout-form'><fieldset class='uk-fieldset'><div class='uk-margin'></div><input class='uk-input' id='workout-title' type='text' value='${workout.name}'></div><div class='uk-margin'></div><textarea class='uk-textarea' id='workout-description' rows='5' value='${workout.description}'></textarea></div><div class='uk-margin'><textarea class='uk-textarea' id='workout-notes' rows='5' value='${workout.notes}'></textarea></div><div class='uk-margin'><input class='uk-input' id='youtube-url' type='text' value='${workout.video_url}'></div><div class='uk-margin'><label class='uk-form-label' for='form-stacked-select'>Select Day</label><div class='uk-form-controls'><select class='uk-select' id='form-stacked-select'><option>Sunday</option><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option></select></div></div></fieldset><button class='btn btn-primary pill px-4'>Submit</button></form>`
+    divCenter.appendChild(editForm)
+    document.getElementById("workout-description").value = workout.description
+    document.getElementById("workout-notes").value = workout.notes
+    editForm.addEventListener("submit", (event) => editWorkout(event, workout))
+}
+
+function editWorkout(event,workout){
+    let dayName = event.target.querySelector("#form-stacked-select").value
+    let day
+    switch(dayName){
+        case "Sunday":
+            day = 1;
+            break;
+          case "Monday":
+            day = 2;
+            break;
+          case "Tuesday":
+             day = 3;
+            break;
+          case "Wednesday":
+            day = 4;
+            break;
+          case "Thursday":
+            day = 5;
+            break;
+          case "Friday":
+            day = 6;
+            break;
+          case "Saturday":
+            day = 7;
+        }
+
+    let data = {
+        name: event.target.querySelector("#workout-title").value,
+        description: event.target.querySelector("#workout-description").value,
+        video_url: event.target.querySelector("#youtube-url").value,
+        notes: event.target.querySelector("#workout-notes").value,
+        day_id: day
+    }
+
+    fetch(`http://localhost:3000/workouts/${workout.id}`, {
+        method: "PATCH",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(res => res.json())
+    .then(data => renderWorkoutShow(data))
 }
 
 function removeWorkout(workout){
