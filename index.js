@@ -218,7 +218,7 @@ let  yourWorkouts = res.user_workouts.filter(d => d.day_id === num)
 
 
 function removeUserWorkout(e, res, rowWrap, workout){
-    
+
 
     let data = {
         user_id: res.id,
@@ -238,6 +238,8 @@ function removeUserWorkout(e, res, rowWrap, workout){
                 body: JSON.stringify(data)
     }).then(res => res.json())
     .then(res =>{
+    let todaysWorkout = document.getElementById(`todayWorkout-${workout.id}`)
+        todaysWorkout.remove()
             rowWrap.remove()
      scheduledWorkouts(res)})
 
@@ -352,6 +354,7 @@ function displayTodaysWorkout(res) {
     let dayworkouts = res.user_workouts.filter(day => day.day_id === d)
     dayworkouts.forEach( element => {
     let todayWorkoutDiv = document.createElement('div')
+    todayWorkoutDiv.id = `todayWorkout-${element.id}`
     todayWorkoutDiv.classList.add('col-md-6', 'col-lg-3')
     todayWorkoutDiv.innerHTML =
         `<div class="w-100 h-100 block-feature p-5 bg-light">
@@ -362,7 +365,7 @@ function displayTodaysWorkout(res) {
         <p>${element.workout.name}</p>
         </div>`
     todayRow.appendChild(todayWorkoutDiv)})
-    }        
+    }
     scheduledWorkouts(res)
 
     
