@@ -121,7 +121,7 @@ function renderWorkoutShow(workout){
         deleteButton.innerHTML = "<a class='uk-icon-button uk-margin-small-right' uk-icon='trash'></a>"
         deleteButton.style.marginLeft = "30em"
         h2.appendChild(deleteButton)
-        deleteButton.addEventListener("click", (event) => removeWorkout(divCenter, workout))
+        deleteButton.addEventListener("click", (event) => removeWorkout(workout))
     }
     h2.appendChild(childDiv)
     const descH4 = document.createElement("h4")
@@ -130,7 +130,7 @@ function renderWorkoutShow(workout){
     childDiv.appendChild(descH4)
 }
 
-function removeWorkout(divCenter, workout){
+function removeWorkout(workout){
     let data = {
         name: workout.name,
         description: workout.description,
