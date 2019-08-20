@@ -151,6 +151,7 @@ function renderWorkoutShow(workout){
 }
 
 function removeWorkout(workout){
+
     let data = {
         name: workout.name,
         description: workout.description,
@@ -320,7 +321,7 @@ function renderMyWorkouts(res){
             a.href = "#"
             li.appendChild(a)
             childDiv.appendChild(li)
-            a.addEventListener("click", (event) => renderWorkoutShow(user_workout.workout))
+            a.addEventListener("click", (event) => renderWorkoutShow(res, user_workout.workout))
         }
     )
 }
