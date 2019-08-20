@@ -7,20 +7,20 @@ document.addEventListener("DOMContentLoaded", () => {
 let loginForm = document.getElementById('sign-in')
 loginForm.addEventListener('submit', login)
 
+const addWorkoutForm = document.getElementById("add-workout-form")
 function login(){
     event.preventDefault()
-
+    
   let username = document.getElementById('username').value
   fetch(`http://localhost:3000/login/${username}`)
   .then(res => res.json())
   .then(res => {
-    const addWorkoutForm = document.getElementById("add-workout-form")
     addWorkoutForm.addEventListener("submit", (e) => addMyWorkout(event, res))
         let displayUsername = document.getElementById('logged-in')
-      displayUsername.innerText = res.name
+      displayUsername.innerText = res.username
         const myWorkoutButton = document.getElementById("my-workouts")
     myWorkoutButton.addEventListener("click", () => renderMyWorkouts(res))
-
+    loginForm.reset()
 
     scheduledWorkouts(res)
   })
@@ -125,19 +125,49 @@ let  yourWorkouts = res.user_workouts.filter(d => d.day_id === num)
      yourWorkouts.forEach(workout => {
         let rowWrap = document.createElement('div')
         rowWrap.classList.add('row-wrap')
+       
         rowWrap.innerHTML=`
         <div class="row bg-white p-4 align-items-center">
             <div class="col-sm-3 col-md-3 col-lg-3"><h3 class="h5">${workout.workout.name}</h3></div>
             <div class="col-sm-3 col-md-3 col-lg-3"><span></span>Notes: ${workout.workout.notes}</div>
             <div class="col-sm-3 col-md-3 col-lg-3"><span></span> </div>       
-            <div class="col-sm-3 col-md-3 col-lg-3 text-md-right"><a href="#" class="btn btn-primary pill px-4 mt-3 mt-md-0">Delete Workout</a></div>     
+            <div class="col-sm-3 col-md-3 col-lg-3 text-md-right"><a class="btn btn-primary pill px-4 mt-3 mt-md-0" id="delete-button${workout.id}">Delete Workout</a></div>     
         </div>`
-
-//    workoutTab.appendChild(pillDay)
+        
     pillDay.appendChild(rowWrap)
+    let deleteButton = document.getElementById(`delete-button${workout.id}`)
+    deleteButton.addEventListener('click', (e) => removeUserWorkout(e, res, rowWrap, workout))
     
         })
     }
+
+
+function removeUserWorkout(e, res, rowWrap, workout){
+    
+
+    let data = {
+        user_id: res.id,
+        user_workout_id: workout.id
+
+    }
+    // method: "POST",
+    // headers: {
+    //     'Content-Type': 'application/json'
+    // },
+    // body: JSON.stringify(data)
+    fetch('http://localhost:3000/user_workouts/:username', {
+                method: "DELETE",
+                headers: {
+                        'Content-Type': 'application/json'
+                    },
+                body: JSON.stringify(data)
+    }).then(res => res.json())
+    .then(res =>{
+            rowWrap.remove()
+     scheduledWorkouts(res)})
+
+}
+
 
 
 function addMyWorkout(event, res){
@@ -177,7 +207,7 @@ function addMyWorkout(event, res){
         day_id: day,
         user_id: res.id
     }
-  debugger
+ 
     fetch(`http://localhost:3000/addworkout/${res.username}`, {
         method: "POST",
         headers: {
@@ -186,7 +216,10 @@ function addMyWorkout(event, res){
         body: JSON.stringify(data)
     })
     .then(res => res.json())
-    .then(res => scheduledWorkouts(res) )
+    .then(res => {
+        alert("Workout Added!")
+        addWorkoutForm.reset()
+        scheduledWorkouts(res)} )
 }
     
 
