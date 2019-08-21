@@ -95,27 +95,8 @@ function scheduledWorkouts(res){
     
     let saturdayButton = document.getElementById('pills-saturday-tab')
     saturdayButton.addEventListener('click', (e) => renderDay(e, res, 7))
-
 }
-function renderDay(e, res, num){
-   
-    let pillDay = document.getElementById(`pills-1`)
-    pillDay.innerText = ""
 
-    let yourWorkouts = res.user_workouts.filter(d => d.day_id === num)
-    yourWorkouts.forEach(workout => {
-    let rowWrap = document.createElement('div')
-    rowWrap.classList.add('row-wrap')
-    rowWrap.innerHTML=`
-        <div class="row bg-white p-4 align-items-center">
-            <div class="col-sm-3 col-md-3 col-lg-3"><h3 class="h5">${workout.workout.name}</h3></div>
-            <div class="col-sm-3 col-md-3 col-lg-3"><span></span>Notes: ${workout.workout.notes}</div>
-            <div class="col-sm-3 col-md-3 col-lg-3"><span></span> </div>       
-            <div class="col-sm-3 col-md-3 col-lg-3 text-md-right"><a href="#" class="btn btn-primary pill px-4 mt-3 mt-md-0">Delete Workout</a></div>     
-        </div>`
-    pillDay.appendChild(rowWrap)
-    })
-}
 
 function getAllWorkoutsButton(){
     const allWorkoutButton = document.getElementById("all-workouts")
@@ -282,6 +263,8 @@ function scheduledWorkouts(res){
     let saturdayButton = document.getElementById('pills-saturday-tab')
     saturdayButton.addEventListener('click', (e) => renderDay(e, res, 7))
 }
+
+
 function renderDay(e, res, num){
  let pillDay = document.getElementById(`pills-1`)
  pillDay.innerText = ""
@@ -291,7 +274,7 @@ let  yourWorkouts = res.user_workouts.filter(d => d.day_id === num)
     yourWorkouts.forEach(workout => {
         let rowWrap = document.createElement('div')
         rowWrap.classList.add('row-wrap')
-       
+        rowWrap.id = `rowWrap-${workout.id}`
         rowWrap.innerHTML=`
         <div class="row bg-white p-4 align-items-center">
             <div class="col-sm-3 col-md-3 col-lg-3"><h3 class="h5">${workout.workout.name}</h3></div>
@@ -320,15 +303,16 @@ function removeUserWorkout(e, res, rowWrap, workout){
     fetch('http://localhost:3000/user_workouts/:username', {
                 method: "DELETE",
                 headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    'Content-Type': 'application/json'
+                },
                 body: JSON.stringify(data)
-    }).then(res => res.json())
-    .then(res =>{
-        document.getElementById(`todayWorkout-${workout.id}`).remove()
-            rowWrap.remove()
-     scheduledWorkouts(res)})
-
+            }).then(res => res.json())
+            .then(res =>{
+                currentUser = res
+                document.getElementById(`todayWorkout-${workout.id}`).remove()
+                scheduledWorkouts(res)})
+                rowWrap.remove()
+                
 }
 
 
@@ -470,12 +454,21 @@ function removeUserShowWorkout(event, workout){
                     body: JSON.stringify(data)
         }).then(res => res.json())
         .then(res =>{
+           
             currentUser = res
             let workoutDiv = document.getElementById(`todayWorkout-${workout.id}`)
+            let scheduleRowDiv = document.getElementById(`rowWrap-${workout.id}`)
             if(workoutDiv){
                 workoutDiv.remove()
             }
+
+            if (scheduleRowDiv){
+                scheduleRowDiv.remove()
+            }
+
             renderMyWorkouts()
+            scheduledWorkouts(res)
+
          })
     
     }
