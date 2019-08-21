@@ -43,11 +43,11 @@ homelink.addEventListener("click", renderHomeDiv)
 
 function renderHomeDiv(){
 
-    // fetch(`http://localhost:3000/login/${currentUser.username}`)
-    // .then(res => res.json())
-    // .then(res => {
-    //     currentUser = res
-    // })
+    fetch(`http://localhost:3000/login/${currentUser.username}`)
+    .then(res => res.json())
+    .then(res => {
+        currentUser = res
+    })
 
 
 
@@ -471,6 +471,10 @@ function removeUserShowWorkout(event, workout){
         }).then(res => res.json())
         .then(res =>{
             currentUser = res
+            let workoutDiv = document.getElementById(`todayWorkout-${workout.id}`)
+            if(workoutDiv){
+                workoutDiv.remove()
+            }
             renderMyWorkouts()
          })
     
@@ -505,7 +509,7 @@ function displayTodaysWorkout(res) {
         let dayworkouts = res.user_workouts.filter(day => day.day_id === d)
         
         dayworkouts.forEach( element => {
-        
+    
         let todayWorkoutDiv = document.createElement('div')
     todayWorkoutDiv.classList.add('col-md-6', 'col-lg-3')
     todayWorkoutDiv.id = `todayWorkout-${element.id}`
