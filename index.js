@@ -43,12 +43,13 @@ homelink.addEventListener("click", renderHomeDiv)
 
 function renderHomeDiv(){
 
+    if(currentUser){
     fetch(`http://localhost:3000/login/${currentUser.username}`)
     .then(res => res.json())
     .then(res => {
         currentUser = res
     })
-
+}
 
 
 
