@@ -24,7 +24,7 @@ function login(){
   .then(res => {
       
       if (res.id){
-          addWorkoutForm.addEventListener("submit", (e) => addMyWorkout(event, res))
+          addWorkoutForm.addEventListener("submit", (e) => addMyWorkoutFromForm(event, res))
           let displayUsername = document.getElementById('logged-in')
           displayUsername.innerText = res.username
           const myWorkoutButton = document.getElementById("my-workouts")
@@ -137,7 +137,11 @@ function renderWorkoutShow(workout){
     divCenter.appendChild(h2)
     if((document.getElementById('logged-in').innerText) !== ""){
 
-
+        const addButton = document.createElement("a")
+        addButton.innerHTML = "<a class='uk-icon-button uk-margin-small-right' uk-icon='plus'></a>"
+        addButton.style.marginLeft = "30em"
+        h2.appendChild(addButton)
+        addButton.addEventListener("click", (event) => addMyWorkout(workout))
         const editButton = document.createElement("a")
         editButton.innerHTML = "<a class='uk-icon-button uk-margin-small-right' uk-icon='pencil'></a>"
         editButton.style.marginLeft = "30em"
@@ -157,6 +161,21 @@ function renderWorkoutShow(workout){
     notesH4.innerHTML = `<strong>Notes:</strong> ${workout.notes}`
     childDiv.appendChild(descH4)
     childDiv.appendChild(notesH4)
+}
+
+function addMyWorkout(workout){
+    let data = {
+        user_id: currentUser.id,
+        workout_id: workout.id
+    }
+    fetch("http://localhost:3000/user_workouts", {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(res => console.log(res))
 }
 
 function renderEditWorkoutForm(workout, divCenter){
@@ -311,8 +330,8 @@ function removeUserWorkout(e, res, rowWrap, workout){
 
 
 
-function addMyWorkout(event, res){
-
+function addMyWorkoutFromForm(event, res){
+    debugger
     event.preventDefault()
 
     let dayName = event.target.querySelector("#form-stacked-select").value
