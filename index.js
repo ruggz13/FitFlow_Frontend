@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 let loginForm = document.getElementById('sign-in')
 let currentUser
+let username
 loginForm.addEventListener('submit', login)
 
 let addWorkoutForm = document.getElementById("add-workout-form")
@@ -18,34 +19,57 @@ let addWorkoutForm = document.getElementById("add-workout-form")
 function login(){
     event.preventDefault()
     
-    let username = document.getElementById('username').value
+     username = document.getElementById('username').value
     fetch(`http://localhost:3000/login/${username}`)
     .then(res => res.json())
-  .then(res => {
-      
+    .then(res => {
+     
       if (res.id){
           addWorkoutForm.addEventListener("submit", (e) => addMyWorkoutFromForm(event, res))
           let displayUsername = document.getElementById('logged-in')
           displayUsername.innerText = res.username
-          const myWorkoutButton = document.getElementById("my-workouts")
-    myWorkoutButton.addEventListener("click", () => renderMyWorkouts(res))
-    loginForm.reset()
-    currentUser = res
-    displayTodaysWorkout(res)
-      }
-      
-      scheduledWorkouts(res)
+          loginForm.reset()
+          currentUser = res
+          displayTodaysWorkout(res)
+        }
+        
+        scheduledWorkouts(res)
     })
 }
+const myWorkoutButton = document.getElementById("my-workouts")
+myWorkoutButton.addEventListener("click", () => renderMyWorkouts())
 let homelink = document.getElementById('home-link')
 homelink.addEventListener("click", renderHomeDiv)
+
 function renderHomeDiv(){
+
+    fetch(`http://localhost:3000/login/${currentUser.username}`)
+    .then(res => res.json())
+    .then(res => {
+        currentUser = res
+    })
+
+
+
+
+
 const divCenter = document.getElementById("center-div")
 divCenter.innerText = "" 
-divCenter.innerHTML = '<div class="col-md-12 col-lg-5 mb-5 mb-lg-0"><h2 class="mb-3 text-uppercase">Add <strong class="text-black font-weight-bold">My Workout</strong></h2><form id="add-workout-form"><fieldset class="uk-fieldset"><div class="uk-margin"><input class="uk-input" id="workout-title" type="text" placeholder="Title of Workout"></div><div class="uk-margin"><textarea class="uk-textarea" id="workout-description" rows="5" placeholder="Description of Workout"></textarea></div><div class="uk-margin"><textarea class="uk-textarea" id="workout-notes" rows="5" placeholder="Notes"></textarea></div><div class="uk-margin"><input class="uk-input" id="youtube-url" type="text" placeholder="Embedded YouTube URL"></div><div class="uk-margin"><label class="uk-form-label" for="form-stacked-select">Select Day</label><div class="uk-form-controls"><select class="uk-select" id="form-stacked-select"><option>Sunday</option><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option></select></div></div></fieldset><button class="btn btn-primary pill px-4">Submit</button></form></div><div class="col-md-12 col-lg-6 ml-auto"><img src="images/about.jpg" alt="Image" class="img-fluid"></div>'
+divCenter.innerHTML = `<div class="col-md-12 col-lg-5 mb-5 mb-lg-0"><h2 class="mb-3 text-uppercase">Add <strong class="text-black font-weight-bold">My Workout</strong></h2><form id="add-workout-form"><fieldset class="uk-fieldset">
+<div class="uk-margin"><input class="uk-input" id="workout-title" type="text" placeholder="Title of Workout"></div><div class="uk-margin"><textarea class="uk-textarea" id="workout-description" rows="5" placeholder="Description of Workout">
+</textarea></div><div class="uk-margin">
+<textarea class="uk-textarea" id="workout-notes" rows="5" placeholder="Notes"></textarea></div><div class="uk-margin"><input class="uk-input" id="youtube-url" type="text" placeholder="Embedded YouTube URL">
+</div><div class="uk-margin"><label class="uk-form-label" for="form-stacked-select">Select Day</label><div class="uk-form-controls"><select class="uk-select" id="form-stacked-select">
+<option>Sunday</option><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option></select></div>
+</div></fieldset><button class="btn btn-primary pill px-4">Submit</button>
+</form></div><div class="col-md-12 col-lg-6 ml-auto"><img src="images/about.jpg" alt="Image" class="img-fluid"></div>`
+
+
+
 
 let addWorkoutForm = document.getElementById("add-workout-form")
 addWorkoutForm.addEventListener("submit", (e) => addMyWorkout(event, currentUser))
+    
 }
 
 function scheduledWorkouts(res){
@@ -71,27 +95,8 @@ function scheduledWorkouts(res){
     
     let saturdayButton = document.getElementById('pills-saturday-tab')
     saturdayButton.addEventListener('click', (e) => renderDay(e, res, 7))
-
 }
-function renderDay(e, res, num){
-   
-    let pillDay = document.getElementById(`pills-1`)
-    pillDay.innerText = ""
 
-    let yourWorkouts = res.user_workouts.filter(d => d.day_id === num)
-    yourWorkouts.forEach(workout => {
-    let rowWrap = document.createElement('div')
-    rowWrap.classList.add('row-wrap')
-    rowWrap.innerHTML=`
-        <div class="row bg-white p-4 align-items-center">
-            <div class="col-sm-3 col-md-3 col-lg-3"><h3 class="h5">${workout.workout.name}</h3></div>
-            <div class="col-sm-3 col-md-3 col-lg-3"><span></span>Notes: ${workout.workout.notes}</div>
-            <div class="col-sm-3 col-md-3 col-lg-3"><span></span> </div>       
-            <div class="col-sm-3 col-md-3 col-lg-3 text-md-right"><a href="#" class="btn btn-primary pill px-4 mt-3 mt-md-0">Delete Workout</a></div>     
-        </div>`
-    pillDay.appendChild(rowWrap)
-    })
-}
 
 function getAllWorkoutsButton(){
     const allWorkoutButton = document.getElementById("all-workouts")
@@ -314,15 +319,18 @@ function scheduledWorkouts(res){
     let saturdayButton = document.getElementById('pills-saturday-tab')
     saturdayButton.addEventListener('click', (e) => renderDay(e, res, 7))
 }
+
+
 function renderDay(e, res, num){
  let pillDay = document.getElementById(`pills-1`)
  pillDay.innerText = ""
 
 let  yourWorkouts = res.user_workouts.filter(d => d.day_id === num)
-     yourWorkouts.forEach(workout => {
+    if (yourWorkouts.length > 0){
+    yourWorkouts.forEach(workout => {
         let rowWrap = document.createElement('div')
         rowWrap.classList.add('row-wrap')
-       
+        rowWrap.id = `rowWrap-${workout.id}`
         rowWrap.innerHTML=`
         <div class="row bg-white p-4 align-items-center">
             <div class="col-sm-3 col-md-3 col-lg-3"><h3 class="h5">${workout.workout.name}</h3></div>
@@ -335,7 +343,7 @@ let  yourWorkouts = res.user_workouts.filter(d => d.day_id === num)
     let deleteButton = document.getElementById(`delete-button${workout.id}`)
     deleteButton.addEventListener('click', (e) => removeUserWorkout(e, res, rowWrap, workout))
     
-        })
+        })}
     }
 
 
@@ -347,22 +355,20 @@ function removeUserWorkout(e, res, rowWrap, workout){
         user_workout_id: workout.id
 
     }
-    // method: "POST",
-    // headers: {
-    //     'Content-Type': 'application/json'
-    // },
-    // body: JSON.stringify(data)
+
     fetch('http://localhost:3000/user_workouts/:username', {
                 method: "DELETE",
                 headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    'Content-Type': 'application/json'
+                },
                 body: JSON.stringify(data)
-    }).then(res => res.json())
-    .then(res =>{
-            rowWrap.remove()
-     scheduledWorkouts(res)})
-
+            }).then(res => res.json())
+            .then(res =>{
+                currentUser = res
+                document.getElementById(`todayWorkout-${workout.id}`).remove()
+                scheduledWorkouts(res)})
+                rowWrap.remove()
+                
 }
 
 
@@ -416,14 +422,19 @@ function addMyWorkoutFromForm(event, res){
         alert("Workout Added!")
         addWorkoutForm.reset()
         displayTodaysWorkout(res)
+        renderDay(res)
         } )
 }
 
 
 
     
-function renderMyWorkouts(res){
-    debugger
+
+function renderMyWorkouts(){
+    
+    fetch(`http://localhost:3000/login/${currentUser.username}`)
+    .then(res => res.json())
+    .then(res => {
     const divCenter = document.getElementById("center-div")
     divCenter.innerHTML = ""
     const childDiv = document.createElement("div")
@@ -433,6 +444,7 @@ function renderMyWorkouts(res){
     childDiv.appendChild(h2)
     res.user_workouts.forEach(
         user_workout => {
+                     
             const li = document.createElement("li")
             const a = document.createElement("a")
             a.innerText = user_workout.workout.name
@@ -440,10 +452,82 @@ function renderMyWorkouts(res){
             a.href = "#"
             li.appendChild(a)
             childDiv.appendChild(li)
-            a.addEventListener("click", (event) => renderWorkoutShow(user_workout.workout))
+            a.addEventListener("click", (event) => renderUserWorkoutShow(res, user_workout))
         }
-    )
+    )})
 }
+
+
+function renderUserWorkoutShow(res, workout){
+    const divCenter = document.getElementById("center-div")
+    divCenter.innerHTML = ""
+    const childDiv = document.createElement("div")
+    childDiv.innerHTML = "<div class='col-md-12 col-lg-5 mb-5 mb-lg-0'>"
+    const h2 = document.createElement("h2")
+    h2.innerHTML = `<h2 class='mb-3 text-uppercase'><strong class='text-black font-weight-bold'>${workout.workout.name}</strong></h2>`
+    divCenter.appendChild(h2)
+
+    const editButton = document.createElement("a")
+    editButton.innerHTML = "<a class='uk-icon-button uk-margin-small-right' uk-icon='pencil'></a>"
+    editButton.style.marginLeft = "30em"
+    h2.appendChild(editButton)
+    editButton.addEventListener("click", (event) => renderEditWorkoutForm(workout.workout, divCenter))
+    const deleteButton = document.createElement("a")
+    deleteButton.innerHTML = "<a class='uk-icon-button uk-margin-small-right' uk-icon='trash'></a>"
+    deleteButton.style.marginLeft = "30em"
+    h2.appendChild(deleteButton)
+
+    deleteButton.addEventListener("click", (event) => removeUserShowWorkout(event, workout))
+    
+    h2.appendChild(childDiv)
+    const descH4 = document.createElement("h4")
+    descH4.innerHTML = `<strong>Description:</strong> ${workout.workout.description}`
+    childDiv.innerHTML = `<iframe width='560' height='315' src='${workout.workout.video_url}' frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe>`
+    const notesH4 = document.createElement("h4")
+    notesH4.innerHTML = `<strong>Notes:</strong> ${workout.workout.notes}`
+    childDiv.appendChild(descH4)
+    childDiv.appendChild(notesH4)
+}
+
+
+
+
+
+
+
+function removeUserShowWorkout(event, workout){
+
+        let data = {
+            user_workout_id: workout.id,
+            user_id: currentUser.id
+        }
+    
+        fetch(`http://localhost:3000/user_workouts/${currentUser.username}`, {
+                    method: "DELETE",
+                    headers: {
+                            'Content-Type': 'application/json'
+                        },
+                    body: JSON.stringify(data)
+        }).then(res => res.json())
+        .then(res =>{
+           
+            currentUser = res
+            let workoutDiv = document.getElementById(`todayWorkout-${workout.id}`)
+            let scheduleRowDiv = document.getElementById(`rowWrap-${workout.id}`)
+            if(workoutDiv){
+                workoutDiv.remove()
+            }
+
+            if (scheduleRowDiv){
+                scheduleRowDiv.remove()
+            }
+
+            renderMyWorkouts()
+            scheduledWorkouts(res)
+
+         })
+    
+    }
 
 
 
@@ -465,22 +549,26 @@ function renderMyWorkouts(res){
 
 
 function displayTodaysWorkout(res) {
-    debugger
     let todayRow = document.getElementById('todays-workout-row')
     todayRow.innerText = ""
     let d = new Date();
     d = d.getDay() + 1
+    
     if (res){
-    let dayworkouts = res.user_workouts.filter(day => day.day_id === d)
-    dayworkouts.forEach( element => {
-    let todayWorkoutDiv = document.createElement('div')
+        let dayworkouts = res.user_workouts.filter(day => day.day_id === d)
+        
+        dayworkouts.forEach( element => {
+    
+        let todayWorkoutDiv = document.createElement('div')
     todayWorkoutDiv.classList.add('col-md-6', 'col-lg-3')
+    todayWorkoutDiv.id = `todayWorkout-${element.id}`
+
     todayWorkoutDiv.innerHTML =
         `<div class="w-100 h-100 block-feature p-5 bg-light">
         <span class="d-block mb-3">
             <span class="flaticon-weight display-4"></span>
         </span>
-        <h2>Today's Workout</h2>
+        <h2>Today's Workouts</h2>
         <p>${element.workout.name}</p>
         </div>`
     todayRow.appendChild(todayWorkoutDiv)})
