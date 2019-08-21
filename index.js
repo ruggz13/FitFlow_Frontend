@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 let loginForm = document.getElementById('sign-in')
 let currentUser
+let username
 loginForm.addEventListener('submit', login)
 
 let addWorkoutForm = document.getElementById("add-workout-form")
@@ -18,11 +19,11 @@ let addWorkoutForm = document.getElementById("add-workout-form")
 function login(){
     event.preventDefault()
     
-    let username = document.getElementById('username').value
+     username = document.getElementById('username').value
     fetch(`http://localhost:3000/login/${username}`)
     .then(res => res.json())
   .then(res => {
-      
+     
       if (res.id){
           addWorkoutForm.addEventListener("submit", (e) => addMyWorkout(event, res))
           let displayUsername = document.getElementById('logged-in')
@@ -39,13 +40,26 @@ function login(){
 }
 let homelink = document.getElementById('home-link')
 homelink.addEventListener("click", renderHomeDiv)
+
 function renderHomeDiv(){
+
 const divCenter = document.getElementById("center-div")
 divCenter.innerText = "" 
-divCenter.innerHTML = '<div class="col-md-12 col-lg-5 mb-5 mb-lg-0"><h2 class="mb-3 text-uppercase">Add <strong class="text-black font-weight-bold">My Workout</strong></h2><form id="add-workout-form"><fieldset class="uk-fieldset"><div class="uk-margin"><input class="uk-input" id="workout-title" type="text" placeholder="Title of Workout"></div><div class="uk-margin"><textarea class="uk-textarea" id="workout-description" rows="5" placeholder="Description of Workout"></textarea></div><div class="uk-margin"><textarea class="uk-textarea" id="workout-notes" rows="5" placeholder="Notes"></textarea></div><div class="uk-margin"><input class="uk-input" id="youtube-url" type="text" placeholder="Embedded YouTube URL"></div><div class="uk-margin"><label class="uk-form-label" for="form-stacked-select">Select Day</label><div class="uk-form-controls"><select class="uk-select" id="form-stacked-select"><option>Sunday</option><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option></select></div></div></fieldset><button class="btn btn-primary pill px-4">Submit</button></form></div><div class="col-md-12 col-lg-6 ml-auto"><img src="images/about.jpg" alt="Image" class="img-fluid"></div>'
+divCenter.innerHTML = `<div class="col-md-12 col-lg-5 mb-5 mb-lg-0"><h2 class="mb-3 text-uppercase">Add <strong class="text-black font-weight-bold">My Workout</strong></h2><form id="add-workout-form"><fieldset class="uk-fieldset">
+<div class="uk-margin"><input class="uk-input" id="workout-title" type="text" placeholder="Title of Workout"></div><div class="uk-margin"><textarea class="uk-textarea" id="workout-description" rows="5" placeholder="Description of Workout">
+</textarea></div><div class="uk-margin">
+<textarea class="uk-textarea" id="workout-notes" rows="5" placeholder="Notes"></textarea></div><div class="uk-margin"><input class="uk-input" id="youtube-url" type="text" placeholder="Embedded YouTube URL">
+</div><div class="uk-margin"><label class="uk-form-label" for="form-stacked-select">Select Day</label><div class="uk-form-controls"><select class="uk-select" id="form-stacked-select">
+<option>Sunday</option><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option></select></div>
+</div></fieldset><button class="btn btn-primary pill px-4">Submit</button>
+</form></div><div class="col-md-12 col-lg-6 ml-auto"><img src="images/about.jpg" alt="Image" class="img-fluid"></div>`
+
+
+
 
 let addWorkoutForm = document.getElementById("add-workout-form")
 addWorkoutForm.addEventListener("submit", (e) => addMyWorkout(event, currentUser))
+    
 }
 
 function scheduledWorkouts(res){
@@ -291,11 +305,7 @@ function removeUserWorkout(e, res, rowWrap, workout){
         user_workout_id: workout.id
 
     }
-    // method: "POST",
-    // headers: {
-    //     'Content-Type': 'application/json'
-    // },
-    // body: JSON.stringify(data)
+
     fetch('http://localhost:3000/user_workouts/:username', {
                 method: "DELETE",
                 headers: {
@@ -304,6 +314,7 @@ function removeUserWorkout(e, res, rowWrap, workout){
                 body: JSON.stringify(data)
     }).then(res => res.json())
     .then(res =>{
+        document.getElementById(`todayWorkout-${workout.id}`).remove()
             rowWrap.remove()
      scheduledWorkouts(res)})
 
@@ -376,6 +387,7 @@ function renderMyWorkouts(res){
     h2.innerHTML = "<h2 class='mb-3 text-uppercase'>My <strong class='text-black font-weight-bold'>Workouts</strong></h2>"
     childDiv.appendChild(h2)
     res.user_workouts.forEach(
+    
         user_workout => {
             const li = document.createElement("li")
             const a = document.createElement("a")
@@ -409,16 +421,20 @@ function renderMyWorkouts(res){
 
 
 function displayTodaysWorkout(res) {
-   
     let todayRow = document.getElementById('todays-workout-row')
     todayRow.innerText = ""
     let d = new Date();
     d = d.getDay() + 1
+    
     if (res){
-    let dayworkouts = res.user_workouts.filter(day => day.day_id === d)
-    dayworkouts.forEach( element => {
-    let todayWorkoutDiv = document.createElement('div')
+        let dayworkouts = res.user_workouts.filter(day => day.day_id === d)
+        
+        dayworkouts.forEach( element => {
+        
+        let todayWorkoutDiv = document.createElement('div')
     todayWorkoutDiv.classList.add('col-md-6', 'col-lg-3')
+    todayWorkoutDiv.id = `todayWorkout-${element.id}`
+
     todayWorkoutDiv.innerHTML =
         `<div class="w-100 h-100 block-feature p-5 bg-light">
         <span class="d-block mb-3">
