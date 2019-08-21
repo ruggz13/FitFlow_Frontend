@@ -163,6 +163,7 @@ function renderWorkoutShow(workout){
         deleteButton.innerHTML = "<a class='uk-icon-button uk-margin-small-right' uk-icon='trash'></a>"
         deleteButton.style.marginLeft = "62em"
         titleDiv.appendChild(deleteButton)
+        debugger
         deleteButton.addEventListener("click", (event) => removeWorkout(workout))
     }
     titleDiv.appendChild(childDiv)
@@ -374,7 +375,9 @@ function removeUserWorkout(e, res, rowWrap, workout){
             .then(res =>{
                 currentUser = res
                 document.getElementById(`todayWorkout-${workout.id}`).remove()
-                scheduledWorkouts(res)})
+                scheduledWorkouts(res)
+                renderMyWorkouts()
+            })
                 rowWrap.remove()
                 
 }
@@ -430,7 +433,7 @@ function addMyWorkoutFromForm(event, res){
         addWorkoutForm.reset()
         displayTodaysWorkout(res)
         // let e = undefined
-        renderDay(e, res, day)
+        renderDay()
         } )
 }
 
@@ -578,6 +581,7 @@ function displayTodaysWorkout(res) {
         </span>
         <h2>Today's Workouts</h2>
         <p>${element.workout.name}</p>
+        <p>${element.workout.notes}</p>
         </div>`
     todayRow.appendChild(todayWorkoutDiv)})
     }        
