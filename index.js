@@ -322,9 +322,9 @@ function scheduledWorkouts(res){
 
 
 function renderDay(e, res, num){
- let pillDay = document.getElementById(`pills-1`)
- pillDay.innerText = ""
 
+ let pillDay = document.getElementById(`pills-3`)
+ pillDay.innerText = ""
 let  yourWorkouts = res.user_workouts.filter(d => d.day_id === num)
     if (yourWorkouts.length > 0){
     yourWorkouts.forEach(workout => {
@@ -418,11 +418,11 @@ function addMyWorkoutFromForm(event, res){
     })
     .then(res => res.json())
     .then(res => {
-        
         alert("Workout Added!")
         addWorkoutForm.reset()
         displayTodaysWorkout(res)
-        renderDay(res)
+        // let e = undefined
+        renderDay(e, res, day)
         } )
 }
 
