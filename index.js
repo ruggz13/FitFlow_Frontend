@@ -367,6 +367,7 @@ function addMyWorkout(event, res){
         alert("Workout Added!")
         addWorkoutForm.reset()
         displayTodaysWorkout(res)
+        renderDay(res)
         } )
 }
 
