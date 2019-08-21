@@ -132,28 +132,34 @@ function renderWorkoutShow(workout){
     divCenter.innerHTML = ""
     const childDiv = document.createElement("div")
     childDiv.innerHTML = "<div class='col-md-12 col-lg-5 mb-5 mb-lg-0'>"
-    const h2 = document.createElement("h2")
-    h2.innerHTML = `<h2 class='mb-3 text-uppercase'><strong class='text-black font-weight-bold'>${workout.name}</strong></h2>`
-    divCenter.appendChild(h2)
+    const titleDiv = document.createElement("div")
+    titleDiv.innerHTML = `<h2 class='mb-3 text-uppercase'><strong class='text-black font-weight-bold'>${workout.name}</strong></h2>`
+    divCenter.appendChild(titleDiv)
     if((document.getElementById('logged-in').innerText) !== ""){
-
+        
+        const daySelect = document.createElement("form")
+        daySelect.innerHTML = "<form id='day-form'><fieldset class='uk-fieldset'><div class='uk-margin'><label class='uk-form-label' for='form-stacked-select'>Select Day</label></div><div class='uk-form-controls'><select class='uk-select' id='day-select'><option>Sunday</option><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option></select></div></div></fieldset></form>"
+        daySelect.style.width = "200px"
+        daySelect.style.marginLeft = "50em"
+        titleDiv.appendChild(daySelect)
         const addButton = document.createElement("a")
         addButton.innerHTML = "<a class='uk-icon-button uk-margin-small-right' uk-icon='plus'></a>"
-        addButton.style.marginLeft = "30em"
-        h2.appendChild(addButton)
+        addButton.style.marginLeft = "62em"
+        titleDiv.appendChild(addButton)
         addButton.addEventListener("click", (event) => addMyWorkout(workout))
+        titleDiv.appendChild(document.createElement("br"))
         const editButton = document.createElement("a")
         editButton.innerHTML = "<a class='uk-icon-button uk-margin-small-right' uk-icon='pencil'></a>"
-        editButton.style.marginLeft = "30em"
-        h2.appendChild(editButton)
+        editButton.style.marginLeft = "62em"
+        titleDiv.appendChild(editButton)
         editButton.addEventListener("click", (event) => renderEditWorkoutForm(workout, divCenter))
         const deleteButton = document.createElement("a")
         deleteButton.innerHTML = "<a class='uk-icon-button uk-margin-small-right' uk-icon='trash'></a>"
-        deleteButton.style.marginLeft = "30em"
-        h2.appendChild(deleteButton)
+        deleteButton.style.marginLeft = "62em"
+        titleDiv.appendChild(deleteButton)
         deleteButton.addEventListener("click", (event) => removeWorkout(workout))
     }
-    h2.appendChild(childDiv)
+    titleDiv.appendChild(childDiv)
     const descH4 = document.createElement("h4")
     descH4.innerHTML = `<strong>Description:</strong> ${workout.description}`
     childDiv.innerHTML = `<iframe width='560' height='315' src='${workout.video_url}' frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe>`
@@ -164,18 +170,49 @@ function renderWorkoutShow(workout){
 }
 
 function addMyWorkout(workout){
-    let data = {
-        user_id: currentUser.id,
-        workout_id: workout.id
-    }
-    fetch("http://localhost:3000/user_workouts", {
+    let dayName = document.getElementById("day-select").value
+    let day
+    switch(dayName){
+        case "Sunday":
+            day = 1;
+            break;
+          case "Monday":
+            day = 2;
+            break;
+          case "Tuesday":
+             day = 3;
+            break;
+          case "Wednesday":
+            day = 4;
+            break;
+          case "Thursday":
+            day = 5;
+            break;
+          case "Friday":
+            day = 6;
+            break;
+          case "Saturday":
+            day = 7;
+        }
+        let data = {
+            user_id: currentUser.id,
+            workout_id: workout.id,
+            day_id: day
+        }
+    fetch(`http://localhost:3000/addworkout/${currentUser.username}`, {
         method: "POST",
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(data)
     })
-    .then(res => console.log(res))
+    .then(res => res.json())
+    .then(res => {
+        alert("Workout Added!")
+        displayTodaysWorkout(res)
+        renderMyWorkouts(res)
+    })
+
 }
 
 function renderEditWorkoutForm(workout, divCenter){
@@ -232,7 +269,7 @@ function editWorkout(event,workout){
         body: JSON.stringify(data)
     })
     .then(res => res.json())
-    .then(data => renderWorkoutShow(data))
+    .then(res => console.log(res))
 }
 
 function removeWorkout(workout){
@@ -331,7 +368,6 @@ function removeUserWorkout(e, res, rowWrap, workout){
 
 
 function addMyWorkoutFromForm(event, res){
-    debugger
     event.preventDefault()
 
     let dayName = event.target.querySelector("#form-stacked-select").value
@@ -387,6 +423,7 @@ function addMyWorkoutFromForm(event, res){
 
     
 function renderMyWorkouts(res){
+    debugger
     const divCenter = document.getElementById("center-div")
     divCenter.innerHTML = ""
     const childDiv = document.createElement("div")
@@ -428,7 +465,7 @@ function renderMyWorkouts(res){
 
 
 function displayTodaysWorkout(res) {
-   
+    debugger
     let todayRow = document.getElementById('todays-workout-row')
     todayRow.innerText = ""
     let d = new Date();
