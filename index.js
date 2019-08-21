@@ -69,7 +69,7 @@ divCenter.innerHTML = `<div class="col-md-12 col-lg-5 mb-5 mb-lg-0"><h2 class="m
 
 
 let addWorkoutForm = document.getElementById("add-workout-form")
-addWorkoutForm.addEventListener("submit", (e) => addMyWorkout(event, currentUser))
+addWorkoutForm.addEventListener("submit", (e) => addMyWorkoutFromForm(event, currentUser))
     
 }
 
@@ -153,7 +153,7 @@ function renderWorkoutShow(workout){
         addButton.innerHTML = "<a class='uk-icon-button uk-margin-small-right' uk-icon='plus'></a>"
         addButton.style.marginLeft = "62em"
         titleDiv.appendChild(addButton)
-        addButton.addEventListener("click", (event) => addMyWorkout(workout))
+        addButton.addEventListener("click", (event) => addMyWorkout(event, workout))
         titleDiv.appendChild(document.createElement("br"))
         const editButton = document.createElement("a")
         editButton.innerHTML = "<a class='uk-icon-button uk-margin-small-right' uk-icon='pencil'></a>"
