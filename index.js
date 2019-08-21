@@ -202,7 +202,6 @@ function addMyWorkout(workout){
           case "Saturday":
             day = 7;
         }
-        debugger
 
         let data = {
             name: workout.name,
@@ -476,11 +475,11 @@ function renderUserWorkoutShow(res, workout){
     h2.innerHTML = `<h2 class='mb-3 text-uppercase'><strong class='text-black font-weight-bold'>${workout.workout.name}</strong></h2>`
     divCenter.appendChild(h2)
 
-    const editButton = document.createElement("a")
-    editButton.innerHTML = "<a class='uk-icon-button uk-margin-small-right' uk-icon='pencil'></a>"
-    editButton.style.marginLeft = "30em"
-    h2.appendChild(editButton)
-    editButton.addEventListener("click", (event) => renderEditWorkoutForm(workout.workout, divCenter))
+    // const editButton = document.createElement("a")
+    // editButton.innerHTML = "<a class='uk-icon-button uk-margin-small-right' uk-icon='pencil'></a>"
+    // editButton.style.marginLeft = "30em"
+    // h2.appendChild(editButton)
+    // editButton.addEventListener("click", (event) => renderEditWorkoutForm(workout.workout, divCenter))
     const deleteButton = document.createElement("a")
     deleteButton.innerHTML = "<a class='uk-icon-button uk-margin-small-right' uk-icon='trash'></a>"
     deleteButton.style.marginLeft = "30em"
