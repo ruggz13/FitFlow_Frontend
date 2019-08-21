@@ -22,26 +22,36 @@ function login(){
      username = document.getElementById('username').value
     fetch(`http://localhost:3000/login/${username}`)
     .then(res => res.json())
-  .then(res => {
+    .then(res => {
      
       if (res.id){
           addWorkoutForm.addEventListener("submit", (e) => addMyWorkout(event, res))
           let displayUsername = document.getElementById('logged-in')
           displayUsername.innerText = res.username
-          const myWorkoutButton = document.getElementById("my-workouts")
-    myWorkoutButton.addEventListener("click", () => renderMyWorkouts(res))
-    loginForm.reset()
-    currentUser = res
-    displayTodaysWorkout(res)
-      }
-      
-      scheduledWorkouts(res)
+          loginForm.reset()
+          currentUser = res
+          displayTodaysWorkout(res)
+        }
+        
+        scheduledWorkouts(res)
     })
 }
+const myWorkoutButton = document.getElementById("my-workouts")
+myWorkoutButton.addEventListener("click", () => renderMyWorkouts())
 let homelink = document.getElementById('home-link')
 homelink.addEventListener("click", renderHomeDiv)
 
 function renderHomeDiv(){
+
+    // fetch(`http://localhost:3000/login/${currentUser.username}`)
+    // .then(res => res.json())
+    // .then(res => {
+    //     currentUser = res
+    // })
+
+
+
+
 
 const divCenter = document.getElementById("center-div")
 divCenter.innerText = "" 
@@ -277,7 +287,8 @@ function renderDay(e, res, num){
  pillDay.innerText = ""
 
 let  yourWorkouts = res.user_workouts.filter(d => d.day_id === num)
-     yourWorkouts.forEach(workout => {
+    if (yourWorkouts.length > 0){
+    yourWorkouts.forEach(workout => {
         let rowWrap = document.createElement('div')
         rowWrap.classList.add('row-wrap')
        
@@ -293,7 +304,7 @@ let  yourWorkouts = res.user_workouts.filter(d => d.day_id === num)
     let deleteButton = document.getElementById(`delete-button${workout.id}`)
     deleteButton.addEventListener('click', (e) => removeUserWorkout(e, res, rowWrap, workout))
     
-        })
+        })}
     }
 
 
@@ -378,7 +389,12 @@ function addMyWorkout(event, res){
 
 
     
-function renderMyWorkouts(res){
+function renderMyWorkouts(){
+    
+    fetch(`http://localhost:3000/login/${currentUser.username}`)
+    .then(res => res.json())
+    .then(res => {
+   
     const divCenter = document.getElementById("center-div")
     divCenter.innerHTML = ""
     const childDiv = document.createElement("div")
@@ -387,8 +403,8 @@ function renderMyWorkouts(res){
     h2.innerHTML = "<h2 class='mb-3 text-uppercase'>My <strong class='text-black font-weight-bold'>Workouts</strong></h2>"
     childDiv.appendChild(h2)
     res.user_workouts.forEach(
-    
         user_workout => {
+                     
             const li = document.createElement("li")
             const a = document.createElement("a")
             a.innerText = user_workout.workout.name
@@ -396,10 +412,69 @@ function renderMyWorkouts(res){
             a.href = "#"
             li.appendChild(a)
             childDiv.appendChild(li)
-            a.addEventListener("click", (event) => renderWorkoutShow(user_workout.workout))
+            a.addEventListener("click", (event) => renderUserWorkoutShow(res, user_workout))
         }
-    )
+    )})
 }
+
+
+function renderUserWorkoutShow(res, workout){
+    const divCenter = document.getElementById("center-div")
+    divCenter.innerHTML = ""
+    const childDiv = document.createElement("div")
+    childDiv.innerHTML = "<div class='col-md-12 col-lg-5 mb-5 mb-lg-0'>"
+    const h2 = document.createElement("h2")
+    h2.innerHTML = `<h2 class='mb-3 text-uppercase'><strong class='text-black font-weight-bold'>${workout.workout.name}</strong></h2>`
+    divCenter.appendChild(h2)
+
+    const editButton = document.createElement("a")
+    editButton.innerHTML = "<a class='uk-icon-button uk-margin-small-right' uk-icon='pencil'></a>"
+    editButton.style.marginLeft = "30em"
+    h2.appendChild(editButton)
+    editButton.addEventListener("click", (event) => renderEditWorkoutForm(workout.workout, divCenter))
+    const deleteButton = document.createElement("a")
+    deleteButton.innerHTML = "<a class='uk-icon-button uk-margin-small-right' uk-icon='trash'></a>"
+    deleteButton.style.marginLeft = "30em"
+    h2.appendChild(deleteButton)
+
+    deleteButton.addEventListener("click", (event) => removeUserShowWorkout(event, workout))
+    
+    h2.appendChild(childDiv)
+    const descH4 = document.createElement("h4")
+    descH4.innerHTML = `<strong>Description:</strong> ${workout.workout.description}`
+    childDiv.innerHTML = `<iframe width='560' height='315' src='${workout.workout.video_url}' frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe>`
+    const notesH4 = document.createElement("h4")
+    notesH4.innerHTML = `<strong>Notes:</strong> ${workout.workout.notes}`
+    childDiv.appendChild(descH4)
+    childDiv.appendChild(notesH4)
+}
+
+
+
+
+
+
+
+function removeUserShowWorkout(event, workout){
+
+        let data = {
+            user_workout_id: workout.id,
+            user_id: currentUser.id
+        }
+    
+        fetch(`http://localhost:3000/user_workouts/${currentUser.username}`, {
+                    method: "DELETE",
+                    headers: {
+                            'Content-Type': 'application/json'
+                        },
+                    body: JSON.stringify(data)
+        }).then(res => res.json())
+        .then(res =>{
+            currentUser = res
+            renderMyWorkouts()
+         })
+    
+    }
 
 
 
@@ -440,7 +515,7 @@ function displayTodaysWorkout(res) {
         <span class="d-block mb-3">
             <span class="flaticon-weight display-4"></span>
         </span>
-        <h2>Today's Workout</h2>
+        <h2>Today's Workouts</h2>
         <p>${element.workout.name}</p>
         </div>`
     todayRow.appendChild(todayWorkoutDiv)})
