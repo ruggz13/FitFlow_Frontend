@@ -346,7 +346,7 @@ let  yourWorkouts = res.user_workouts.filter(d => d.day_id === num)
             <div class="col-sm-3 col-md-3 col-lg-3"><h3 class="h5">${workout.workout.name}</h3></div>
             <div class="col-sm-3 col-md-3 col-lg-3"><span></span>Notes: ${workout.workout.notes}</div>
             <div class="col-sm-3 col-md-3 col-lg-3"><span></span> </div>       
-            <div class="col-sm-3 col-md-3 col-lg-3 text-md-right"><a class="btn btn-primary pill px-4 mt-3 mt-md-0" id="delete-button${workout.id}">Delete Workout</a></div>     
+            <div class="col-sm-3 col-md-3 col-lg-3 text-md-right"><a class="btn btn-primary pill px-4 mt-3 mt-md-0" id="delete-button${workout.id}" style="color: white;">Delete Workout</a></div>     
         </div>`
         
     pillDay.appendChild(rowWrap)
