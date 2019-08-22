@@ -137,10 +137,9 @@ function renderWorkoutShow(workout){
     const divCenter = document.getElementById("center-div")
     divCenter.innerHTML = ""
     const childDiv = document.createElement("div")
-    childDiv.id = "child-div"
     childDiv.innerHTML = "<div class='col-md-12 col-lg-5 mb-5 mb-lg-0'>"
     const titleDiv = document.createElement("div")
-    titleDiv.innerHTML = `<h2 class='mb-3 text-uppercase' id='workout-title-name'><strong class='text-black font-weight-bold'>${workout.name}</strong></h2>`
+    titleDiv.innerHTML = `<h2 class='mb-3 text-uppercase'><strong class='text-black font-weight-bold'>${workout.name}</strong></h2>`
     divCenter.appendChild(titleDiv)
     if((document.getElementById('logged-in').innerText) !== ""){
         
@@ -169,11 +168,9 @@ function renderWorkoutShow(workout){
     }
     titleDiv.appendChild(childDiv)
     const descH4 = document.createElement("h4")
-    descH4.id = "workout-desc"
     descH4.innerHTML = `<strong>Description:</strong> ${workout.description}`
-    childDiv.innerHTML = `<iframe width='560' height='315' src='${workout.video_url}' frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen id='youtube-vid'></iframe>`
+    childDiv.innerHTML = `<iframe width='560' height='315' src='${workout.video_url}' frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe>`
     const notesH4 = document.createElement("h4")
-    notesH4.id = "h4-notes"
     notesH4.innerHTML = `<strong>Notes:</strong> ${workout.notes}`
     childDiv.appendChild(descH4)
     childDiv.appendChild(notesH4)
@@ -204,12 +201,11 @@ function addMyWorkout(workout){
           case "Saturday":
             day = 7;
         }
+<<<<<<< HEAD
 
+=======
+>>>>>>> parent of baa34cc... fully functioning add button
         let data = {
-            name: workout.name,
-            description: workout.description,
-            video_url: workout.video_url,
-            notes: workout.notes,
             user_id: currentUser.id,
             workout_id: workout.id,
             day_id: day
