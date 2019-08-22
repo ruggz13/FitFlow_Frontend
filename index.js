@@ -178,7 +178,7 @@ function renderWorkoutShow(workout){
 }
 
 function addMyWorkout(event, workout){
-    debugger
+    
     let dayName = document.getElementById("day-select").value
     let day
     switch(dayName){
