@@ -203,7 +203,10 @@ function addMyWorkout(workout){
         }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 
+=======
+>>>>>>> parent of baa34cc... fully functioning add button
 =======
 >>>>>>> parent of baa34cc... fully functioning add button
 =======
