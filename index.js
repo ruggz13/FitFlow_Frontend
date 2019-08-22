@@ -202,7 +202,10 @@ function addMyWorkout(workout){
             day = 7;
         }
 <<<<<<< HEAD
+<<<<<<< HEAD
 
+=======
+>>>>>>> parent of baa34cc... fully functioning add button
 =======
 >>>>>>> parent of baa34cc... fully functioning add button
         let data = {
