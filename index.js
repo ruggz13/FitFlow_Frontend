@@ -225,6 +225,7 @@ function addMyWorkout(workout){
     .then(res => {
         alert("Workout Added!")
         displayTodaysWorkout(res)
+        debugger
         renderMyWorkouts(res)
     })
 
@@ -442,7 +443,6 @@ function addMyWorkoutFromForm(event, res){
 
     
 function renderMyWorkouts(){
-    
     fetch(`http://localhost:3000/login/${currentUser.username}`)
     .then(res => res.json())
     .then(res => {
@@ -454,6 +454,7 @@ function renderMyWorkouts(){
     const h2 = document.createElement("h2")
     h2.innerHTML = "<h2 class='mb-3 text-uppercase'>My <strong class='text-black font-weight-bold'>Workouts</strong></h2>"
     childDiv.appendChild(h2)
+    debugger
     res.user_workouts.forEach(
         user_workout => {
                      
