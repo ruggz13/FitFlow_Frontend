@@ -43,13 +43,12 @@ homelink.addEventListener("click", renderHomeDiv)
 
 function renderHomeDiv(){
 
-    if(currentUser){
     fetch(`http://localhost:3000/login/${currentUser.username}`)
     .then(res => res.json())
     .then(res => {
         currentUser = res
     })
-}
+
 
 
 
@@ -164,7 +163,6 @@ function renderWorkoutShow(workout){
         deleteButton.innerHTML = "<a class='uk-icon-button uk-margin-small-right' uk-icon='trash'></a>"
         deleteButton.style.marginLeft = "62em"
         titleDiv.appendChild(deleteButton)
-        debugger
         deleteButton.addEventListener("click", (event) => removeWorkout(workout))
     }
     titleDiv.appendChild(childDiv)
@@ -179,7 +177,8 @@ function renderWorkoutShow(workout){
     childDiv.appendChild(notesH4)
 }
 
-function addMyWorkout(workout){
+function addMyWorkout(event, workout){
+    
     let dayName = document.getElementById("day-select").value
     let day
     switch(dayName){
@@ -244,6 +243,7 @@ function renderEditWorkoutForm(workout, divCenter){
 }
 
 function editWorkout(event,workout){
+    event.preventDefault
     let dayName = event.target.querySelector("#form-stacked-select").value
     let day
     switch(dayName){
@@ -285,7 +285,7 @@ function editWorkout(event,workout){
         body: JSON.stringify(data)
     })
     .then(res => res.json())
-    .then(res => console.log(res))
+    .then(renderAllWorkouts() )
 }
 
 function removeWorkout(workout){
@@ -377,9 +377,7 @@ function removeUserWorkout(e, res, rowWrap, workout){
             .then(res =>{
                 currentUser = res
                 document.getElementById(`todayWorkout-${workout.id}`).remove()
-                scheduledWorkouts(res)
-                renderMyWorkouts()
-            })
+                scheduledWorkouts(res)})
                 rowWrap.remove()
                 
 }
@@ -435,7 +433,7 @@ function addMyWorkoutFromForm(event, res){
         addWorkoutForm.reset()
         displayTodaysWorkout(res)
         // let e = undefined
-        renderDay()
+        renderDay(e, res, day)
         } )
 }
 
@@ -583,7 +581,6 @@ function displayTodaysWorkout(res) {
         </span>
         <h2>Today's Workouts</h2>
         <p>${element.workout.name}</p>
-        <p>${element.workout.notes}</p>
         </div>`
     todayRow.appendChild(todayWorkoutDiv)})
     }        
