@@ -177,7 +177,8 @@ function renderWorkoutShow(workout){
     childDiv.appendChild(notesH4)
 }
 
-function addMyWorkout(workout){
+function addMyWorkout(event, workout){
+    debugger
     let dayName = document.getElementById("day-select").value
     let day
     switch(dayName){
@@ -241,6 +242,7 @@ function renderEditWorkoutForm(workout, divCenter){
 }
 
 function editWorkout(event,workout){
+    event.preventDefault
     let dayName = event.target.querySelector("#form-stacked-select").value
     let day
     switch(dayName){
@@ -282,7 +284,7 @@ function editWorkout(event,workout){
         body: JSON.stringify(data)
     })
     .then(res => res.json())
-    .then(res => console.log(res))
+    .then(renderAllWorkouts() )
 }
 
 function removeWorkout(workout){
