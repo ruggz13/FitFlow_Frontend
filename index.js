@@ -573,6 +573,7 @@ function displayTodaysWorkout(res) {
         let todayWorkoutDiv = document.createElement('div')
     todayWorkoutDiv.classList.add('col-md-6', 'col-lg-3')
     todayWorkoutDiv.id = `todayWorkout-${element.id}`
+    todayWorkoutDiv.style.paddingTop = "9em"
 
     todayWorkoutDiv.innerHTML =
         `<div class="w-100 h-100 block-feature p-5 bg-light">
